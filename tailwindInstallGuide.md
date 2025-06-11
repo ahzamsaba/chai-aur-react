@@ -6,3 +6,18 @@
 ## npx tailwindcss --version --help
 
 ## npx tailwindcss init -p
+
+## tailwind.config.js ->
+```js
+content: [
+  "./index.html",
+  "./src/**/*.{js,ts,jsx,tsx}",
+]
+```
+## index.css
+```js
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
