@@ -21,3 +21,4 @@ content: [
 @tailwind utilities;
 ```
 
+## npm install -D postcss autoprefixer
