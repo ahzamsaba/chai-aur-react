@@ -9,3 +9,8 @@ npm install --verbose
 -----------------------x-----------------------
 npm config set registry https://registry.npmjs.org/
 ```
+
+## React router dom installation
+```js
+npm i react-router-dom
+```
