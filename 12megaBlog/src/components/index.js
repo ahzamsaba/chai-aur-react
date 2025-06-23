@@ -9,6 +9,8 @@ import Select from './Select'
 import RTE from './RTE'
 import Login from './Login'
 import Signup from './Signup'
+import PostCard from './PostCard'
+import PostForm from './post-form/PostForm'
 
 export {Header, 
         Footer,
@@ -19,5 +21,7 @@ export {Header,
         Select,
         RTE,
         Login,
-        Signup
+        Signup,
+        PostCard,
+        PostForm
     }
