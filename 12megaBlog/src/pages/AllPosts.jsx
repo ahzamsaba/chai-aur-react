@@ -1,15 +1,22 @@
-import React,{ useState, useEffect }  from 'react'
+import React,{ useEffect }  from 'react'
 import appwriteService from '../appwrite/config'
 import { Container, PostCard } from '../components'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPosts } from '../store/postSlice'
 
 function AllPosts() {
-    const [posts, setPosts] = useState([])
-    useEffect(() => {}, [])
-    appwriteService.getPosts([])
-        .then((posts) => {
-            if(posts)
-                setPosts(posts.documents)
-        })
+    const dispatch = useDispatch()
+    const posts = useSelector((state) => state.post.posts)
+
+    useEffect(() => {
+        if(posts.length === 0){
+            appwriteService.getPosts().then((result) => {
+                if(result)
+                    dispatch(setPosts(result.documents))
+            })
+        }
+    }, [dispatch, posts])
+
     return (
         <div className='w-full py-8'>
             <Container>
