@@ -19,7 +19,7 @@ export class Service{
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug,    // or ID.unique()
+                ID.unique(),    // or ID.unique()
                 {
                     title,
                     content,
@@ -123,10 +123,7 @@ export class Service{
     }
 
     getFilePreview(fileId){
-        return this.bucket.getFilePreview(
-            conf.appwriteBucketId,
-            fileId
-        )
+        return this.bucket.getFileView(conf.appwriteBucketId, fileId);
     }
 }
 

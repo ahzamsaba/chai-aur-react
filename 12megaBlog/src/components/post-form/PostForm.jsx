@@ -5,7 +5,7 @@ import appwriteService from '../../appwrite/config'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-function PostForm() {
+export default function PostForm({post}) {
     const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
         defaultValues: {
             title: post?.title || '',
@@ -16,32 +16,54 @@ function PostForm() {
     })
 
     const navigate = useNavigate()
-    const userData = useSelector(state => state.user.userData)
+    const userData = useSelector(state => state.auth.userData)
 
     const submit = async (data) => {
         if(post) {
-            const file = data.image[0] ? appwriteService.uploadFile(data.image[0]) : null
+            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
             if(file) {
                 appwriteService.deleteFile(post.featuredImage)
             }
-            const dbPost = await appwriteService.updatePost(post.$id, 
-                {...data,
-                    featuredImage: file ? file.$id : undefined
-                });
+            // const dbPost = await appwriteService.updatePost(post.$id, 
+            //     {...data,
+            //         featuredImage: file ? file.$id : undefined
+            //     });
+
+            const updatedPost = {
+                title: data.title,
+                slug: data.slug,
+                content: data.content,
+                status: data.status,
+                featuredImage: file ? file.$id : post.featuredImage, // fallback to old image if new one not uploaded
+            };
+
+            const dbPost = await appwriteService.updatePost(post.$id, updatedPost);
+
+
             if(dbPost){
-                navigate(`/posrt/${dbPost.$id}`)
+                navigate(`/post/${dbPost.$id}`)
             }
         }
         else{
             const file = await appwriteService.uploadFile(data.image[0])
 
             if(file){
-                const fileId = file.$id
-                data.featuredImage = fileId
+                // const fileId = file.$id
+                // data.featuredImage = fileId
+                // const dbPost = await appwriteService.createPost({
+                //     ...data,
+                //     userId: userData.$id
+                // });
+
                 const dbPost = await appwriteService.createPost({
-                    ...data,
+                    title: data.title,
+                    slug: data.slug,
+                    content: data.content,
+                    status: data.status,
+                    featuredImage: file.$id,
                     userId: userData.$id
-                });
+                })
+
                 if(dbPost)
                     navigate(`/post/${dbPost.$id}`)
             }
@@ -116,7 +138,7 @@ function PostForm() {
                 className="mb-4"
                 {...register("status", { required: true })}
             />
-            <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+            <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full hover:bg-green-600 active:bg-green-700 shadow transition-all hover:shadow-lg hover:scale-[1.02] active:scale-95">
                 {post ? "Update" : "Submit"}
             </Button>
         </div>
@@ -124,4 +146,4 @@ function PostForm() {
   )
 }
 
-export default PostForm
+ 
